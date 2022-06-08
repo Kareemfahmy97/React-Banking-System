@@ -8,7 +8,7 @@ export const getTableUsers = () => {
   return async (dispatch) => {
     const fetchData = async () => {
       const response = await fetch(
-        "https://bank-system-app-default-rtdb.firebaseio.com/bank.json"
+        ""
       );
       if (!response.ok) {
         throw new Error("Couldn't Fetch users data!");
@@ -47,7 +47,7 @@ export const sendTableUsers = (table) => {
     );
     const sendRequest = async () => {
       const response = await fetch(
-        "https://bank-system-app-default-rtdb.firebaseio.com/bank.json",
+        "",
         {
           method: "PUT",
           body: JSON.stringify({

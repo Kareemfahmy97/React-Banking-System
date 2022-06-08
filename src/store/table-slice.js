@@ -8,13 +8,13 @@ const tableSlice = createSlice({
   reducers: {
     replaceCart(state, action) {
       state.accBalance = action.payload.accBalance;
-      state.users = action.payload.users;
+      state.users = action.payload;
       const newItem = action.payload;
 
-      state.items.push({
+      state.users.push({
           key: newItem.id,
           id: newItem.id,
-          accBalance: newItem.price,
+          accBalance: newItem.accBalance,
           email: newItem.email,
           name: newItem.name,})
     },

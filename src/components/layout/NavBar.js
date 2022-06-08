@@ -1,7 +1,7 @@
 import React from "react";
 import {  Nav, Container, Navbar } from "react-bootstrap";
 
-const Header = () => {
+const NavBar = () => {
   return (
     <>
       <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark" >
@@ -26,4 +26,4 @@ const Header = () => {
   );
 };
 
-export default Header;
+export default NavBar;

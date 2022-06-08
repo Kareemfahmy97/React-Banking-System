@@ -1,10 +1,10 @@
 import Users from './components/users/Users';
-import Header from './components/layout/Header';
 import UsersTable from "./components/layout/UsersTable";
 
 import { Fragment, useEffect } from "react";
 import HeaderTwo from './components/layout/HeaderTwo'
 import { useDispatch, useSelector } from 'react-redux';
+import NavBar from './components/layout/NavBar';
 
 
 let initialValue  = true;
@@ -13,10 +13,10 @@ function App() {
 
   return (
     <Fragment>
-      <Header />
+      <NavBar />
       <HeaderTwo />
-      <UsersTable />
-      <Users />
+      {/* <UsersTable />
+      <Users /> */}
     </Fragment>
   );
 }
