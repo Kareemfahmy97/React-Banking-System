@@ -1,16 +1,21 @@
-import React, { useEffect, Fragment } from "react";
+import React, { Fragment } from "react";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
-import { sendTableUsers, getTableUsers } from "../../store/user-actions";
-import Notification from "../UI/Notifications";
-import { uiAction } from "../../store/ui-slice";
-import { getUsers } from "../../store/new-slice";
+// import Notification from "../UI/Notifications";
+// import { uiAction } from "../../store/ui-slice";
+import { fetchTableUsers } from "../../store/new-actions";
+import { Button } from "react-bootstrap";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 export default function HeaderTwo() {
   const dispatch = useDispatch();
-  const newUsers = useSelector(state => state.users.data);
+  // const newUsers = useSelector(state => state.tableUsers.data);
   const loading = useSelector(state => state.table.loading);
-  const users = useSelector((state) => state.table.users);
+  // const users = useSelector((state) => state.table.users);
+
+  
+  const finalUsers = useSelector((state) => state.users.data);
+  // const myError = useSelector((state) => state.users.error);
   // const notifications = useSelector((state) => state.ui.notification);
   // const showTable = useSelector((state) => state.ui.tableIsVisible);
   
@@ -27,29 +32,35 @@ export default function HeaderTwo() {
 //   console.log('yes')
 // }
 
-if(newUsers){
-  console.log(newUsers);
+    const divStyle = {
+      textAlign: "center",
+      verticalAlign: "middle",
+      margin: "2rem auto",
+      display: 'flex',
 
-}
+    };
   
   return (
     <Fragment>
       <section>
-        <button onClick={() => dispatch(getUsers())} disabled={loading}>
-          {!loading ? "Get Users" : "Loading ..."}
-        </button>
-        <ul>
-          
-          {newUsers.map((user) => (
-            <li key={user.id}> {user.name} </li>
+        <div>
+          <Button
+            onClick={() => dispatch(fetchTableUsers())}
+            disabled={loading}
+            style={divStyle}
+            variant="dark"
+            size="lg"
+          >
+            {!loading ? "Get Users" : "Loading ..."}
+          </Button>
+        </div>
+        {/* <ul>
+          {finalUsers.map((user) => (
+            <li key={user.id}>
+              {`${user.id + 1} ${user.name} $${user.accBalance}`}{" "}
+            </li>
           ))}
-        </ul>
-        <button onClick={() => dispatch(getTableUsers())}>Get them</button>
-        <ul>
-          {users.map((user) => (
-            <li key={user.id}>{user.name}</li>
-          ))}
-        </ul>
+        </ul> */}
       </section>
     </Fragment>
   );

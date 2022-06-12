@@ -1,62 +1,101 @@
-import { Modal, Button, Form, DropdownButton, Dropdown } from "react-bootstrap";
-import { useRef, useState } from "react";
+import {
+  Modal,
+  Button,
+  Form,
+  DropdownButton,
+  Dropdown,
+  Alert,
+} from "react-bootstrap";
+import { useState } from "react";
+import { useSelector } from "react-redux";
+import MyVerticallyCenteredModal from "./VerticalCenteredModal";
 
 function ModalMe() {
+  //States of buttons to recieve and store values and clicks
   const [show, setShow] = useState(false);
-  const [nameOfSender, setNameOfSender] = useState("");
-  const [nameOfReceiver, setNameOfReceiver] = useState("");
+  const [keyOfSender, setKeyOfSender] = useState(null);
+  const [keyOfReceiver, setKeyOfReceiver] = useState(null);
   const [moneyValue, setMoneyValue] = useState(0);
-  const [userMessage, setUserMessage] = useState('');
+  const [userMessage, setUserMessage] = useState("");
+  const [valueCompareCheck, setValueCompareCheck] = useState(false);
+  const [firstUserData, setFirstUserData] = useState(null);
+  const [secondUserData, setSecondUserData] = useState(null);
+  const [modalShow, setModalShow] = useState(false);
+  const [minusValue, setMinusValue] = useState(false);
+  const [disableMe, setDisableMe] = useState(false);
+  const [moneyLimit, setMoneyLimit] = useState('');
+  const finalUsers = useSelector((state) => state.users.data);
 
+  // Handles to use state and event trageting
   const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  const handleShow = () => {
+    setShow(true);
+    console.log(finalUsers);
+  };
 
+  const handleSend = (event) => {
+    setKeyOfSender(event);
+    finalUsers.forEach((element) => {
+      if(element.id == event){
+        console.log('Sender Selected');
+        setFirstUserData(element);
+      };
+    });
+  };
 
-  // const messageUserRef = useRef(null);
-  // const amountUserRef = useRef(null);
-  // const messageValue = messageUserRef.current.value;
-  // const amountValue = amountUserRef.current.value;
+  const handleReceive = (event) => {
+    setKeyOfReceiver(event);
+     finalUsers.forEach((secondUser) => {
+       if (secondUser.id == event) {
+         console.log("Receive Selected");
+         setSecondUserData(secondUser);
+       };
+     });
+     
+  };
 
  
-  const handleSender = (event) => {
-    setNameOfSender(event);
-  };
-  const handleReceive = (event) => {
-    setNameOfReceiver(event);
-  };
+  // Get Inputs 
   const getInputValue = (event) => {
     setMoneyValue(event.target.value);
-  }
+    setMoneyLimit(event.target.value.slice(0, 5));
+    // if(event.target.value.length >= 5){
+    //   setDisableMe(true);
+    // };
+  };
   const getMessageValue = (event) => {
-    setUserMessage(event.target.value)
-  }
-   const handleDone = () => {
-    //  console.log(messageUserRef.current.value);
-    
-     console.log(userMessage);
-     console.log(moneyValue ? 'yes we have money' : 'no');
-     console.log(Number(moneyValue) + 1);
-     console.log(nameOfReceiver);
-     console.log(nameOfSender);
+    setUserMessage(event.target.value);
+  };
+  
 
-     setShow(false);
-   };
-  // const firstUserRef = useRef();
-  // const secondUserRef = useRef();
 
-  // const firstUserValue = firstUserRef.current.value;
-  // const secondUserValue = secondUserRef.current.value;
+  // Closeing Handle 
+  const handleDone = () => {
+      if (moneyValue.includes("-") || moneyValue <= 0) {
+        setMinusValue(true);
+      } else if (keyOfReceiver === keyOfSender) {
+        setValueCompareCheck(true);
+      } else {
+        setValueCompareCheck(false);
+        console.log(`User message : ${userMessage}`);
+        console.log(`Money amount : ${Number(moneyValue) + 1}`);
+        console.log(`reciever: ${keyOfReceiver}`);
+        console.log(`sender: ${keyOfSender}`);
+        console.log(
+          `First User data : ${firstUserData.name}, ${firstUserData.country}`
+        );
+        console.log(
+          `Second User data : ${secondUserData.name}, ${secondUserData.country}`
+        );
+        setShow(false);
+        setModalShow(true);
+      }
+  };
 
-  // const handleKeyClicks = () => {
-  //   console.log(firstUserValue);
-  // };
-// , secondUserValue, messageValue, amountValue
-  // if(firstUserValue && secondUserValue && amountValue){
-  //   submitButton.removeAttribute('disabled');
-  // } else {
+  const usersSelected = keyOfSender && keyOfReceiver && moneyValue;
 
-  // }
-  const usersSelected = nameOfSender && nameOfReceiver  && moneyValue  ;
+
+
   return (
     <>
       <Button variant="primary" size="sm" onClick={handleShow}>
@@ -65,66 +104,49 @@ function ModalMe() {
 
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Modal heading</Modal.Title>
+          <Modal.Title>Sending Money</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form>
             <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-              <Form.Label>Name of First User</Form.Label>
+              <Form.Label>Name of Sending User</Form.Label>
 
-              {/* <Form.Control
-                type="text"
-                disabled={!nameOfSender}
-                ref={firstUserRef}
-                onKeyUpCapture={handleKeyClicks}
-                placeholder={nameOfSender.slice() === "" ? "Amount '$'" : nameOfSender}
-                autoFocus
-              /> */}
               <DropdownButton
-                alignRight
-                // ref={firstUserRef}
                 title={
-                  nameOfSender.slice() === ""
+                  firstUserData === null
                     ? "User Will Send Money"
-                    : nameOfSender
+                    : `"${firstUserData.name}" Balance: $${firstUserData.accBalance}`
                 }
                 id="dropdown-menu-align-right"
-                onSelect={handleSender}
+                onSelect={handleSend}
               >
-                <Dropdown.Item eventKey="option-1">option-1</Dropdown.Item>
-                <Dropdown.Item eventKey="option-2">option-2</Dropdown.Item>
-                <Dropdown.Item eventKey="option-3">option 3</Dropdown.Item>
-                <Dropdown.Divider />
-                <Dropdown.Item eventKey="some link">some link</Dropdown.Item>
+                {finalUsers.map((user) => (
+                  <Dropdown.Item eventKey={user.id}>
+                    {user.key} - {user.name} : ${user.accBalance}
+                    <Dropdown.Divider />
+                  </Dropdown.Item>
+                ))}
+                ;
               </DropdownButton>
             </Form.Group>
             <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-              <Form.Label>Name of Second User</Form.Label>
-
-              {/* <Form.Control
-                type="text"
-                disabled={!nameOfSender}
-                ref={firstUserRef}
-                onKeyUpCapture={handleKeyClicks}
-                placeholder={nameOfSender.slice() === "" ? "Amount '$'" : nameOfSender}
-                autoFocus
-              /> */}
+              <Form.Label>Name of Recieving User</Form.Label>
               <DropdownButton
-                alignRight
-                // ref={secondUserRef}
+                
                 title={
-                  nameOfReceiver.slice() === ""
+                  secondUserData === null
                     ? "User Will Receive Money"
-                    : nameOfReceiver
+                    : `"${secondUserData.name}"  Balance: $${secondUserData.accBalance}`
                 }
                 id="dropdown-menu-align-right"
                 onSelect={handleReceive}
               >
-                <Dropdown.Item eventKey="option-1">option-1</Dropdown.Item>
-                <Dropdown.Item eventKey="option-2">option-2</Dropdown.Item>
-                <Dropdown.Item eventKey="option-3">option 3</Dropdown.Item>
-                <Dropdown.Divider />
-                <Dropdown.Item eventKey="some link">some link</Dropdown.Item>
+                {finalUsers.map((user) => (
+                  <Dropdown.Item eventKey={user.id}>
+                    {user.key} - {user.name} : ${user.accBalance}
+                    <Dropdown.Divider />
+                  </Dropdown.Item>
+                ))}
               </DropdownButton>
             </Form.Group>
             <Form.Group
@@ -132,30 +154,38 @@ function ModalMe() {
               controlId="exampleForm.ControlTextarea1"
             >
               <Form.Label>Amount</Form.Label>
-
-              <Form.Control
-                type="text"
-                disabled={!usersSelected}
-                placeholder={
-                  nameOfSender.slice() === ""
-                    ? "Amount '$'"
-                    : `Send Message to ${nameOfSender}`
-                }
-                // ref={messageUserRef}
-                onChange={getMessageValue}
-                important
-                autoFocus
-              />
               <Form.Control
                 type="number"
                 placeholder="Ex: $25"
-                // ref={amountUserRef}
+                min={1}
+                maxLength={5}
                 onChange={getInputValue}
-                important
+                value={moneyLimit}
                 rows={3}
+              />
+              <Form.Control
+                type="text"
+                disabled={!usersSelected}
+                placeholder={"Amount"}
+                onChange={getMessageValue}
+                autoFocus
               />
             </Form.Group>
           </Form>
+          {!valueCompareCheck ? (
+            ""
+          ) : (
+            <Alert key="ALERT" variant="danger">
+              You can't choose same users!
+            </Alert>
+          )}
+          {minusValue ? (
+            <Alert key="ALERT" variant="danger">
+              You can't send this values, Try bigger numbers!
+            </Alert>
+          ) : (
+            ""
+          )}
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
@@ -171,6 +201,10 @@ function ModalMe() {
           </Button>
         </Modal.Footer>
       </Modal>
+      <MyVerticallyCenteredModal
+        show={modalShow}
+        onHide={() => setModalShow(false)}
+      />
     </>
   );
 }

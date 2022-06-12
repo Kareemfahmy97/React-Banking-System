@@ -1,20 +1,25 @@
-import Users from './components/users/Users';
+// import Users from './components/users/Users';
 import UsersTable from "./components/layout/UsersTable";
 
-import { Fragment, useEffect } from "react";
+import { Fragment } from "react";
 import HeaderTwo from './components/layout/HeaderTwo'
-import { useDispatch, useSelector } from 'react-redux';
+// import { useDispatch, useSelector } from 'react-redux';
 import NavBar from './components/layout/NavBar';
+import UsersTableData from "./components/layout/UsersTableData";
 
 
-let initialValue  = true;
-
+// let initialValue  = true;
+// let ifButtonClicked = true;
 function App() {
 
   return (
     <Fragment>
       <NavBar />
       <HeaderTwo />
+      
+      <UsersTableData />
+      {/* {ifButtonClicked ? <UsersTable /> : ""} */}
+
       {/* <UsersTable />
       <Users /> */}
     </Fragment>

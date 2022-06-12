@@ -2,7 +2,10 @@ import React from "react";
 import { Table } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import ModalMe from "./Modal";
-const UsersTable = () => {
+const UsersTable = (props) => {
+
+  const { name, id, country, email, balance, key } = props;
+
     const divStyle = {
         height: '20px',
         width: '1200px',
@@ -14,7 +17,7 @@ const UsersTable = () => {
     <Table style={divStyle} bordered hover variant="dark" size="sm">
       <thead size="sm">
         <tr>
-          <th>#</th>
+          <th>Id</th>
           <th>E-mail</th>
           <th>Last Name</th>
           <th>E-mail</th>
