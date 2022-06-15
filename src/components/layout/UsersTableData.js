@@ -35,7 +35,7 @@ export const UsersTableData = ()=> {
     return (
       <section>
           <Table  bordered hover variant="dark" size="sm">
-              {finalUsers.length > 0 ? tableHead : 'Click above to see magic!'}
+              {finalUsers.length > 0 && tableHead }
             <tbody >
                 {finalUsers.map((user) => (
                   <tr key={user.id}>
@@ -45,7 +45,7 @@ export const UsersTableData = ()=> {
                     <td>${user.accBalance}</td>
                     <td>{user.country}</td>
                     <td>
-                      <ModalMe />
+                      <ModalMe modalKey={user.id}/>
                     </td>
                   </tr>
                 ))}

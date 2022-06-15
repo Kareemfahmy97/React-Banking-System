@@ -7,10 +7,17 @@ import {
   Alert,
 } from "react-bootstrap";
 import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import MyVerticallyCenteredModal from "./VerticalCenteredModal";
+import {
+  fetchTableUsers,
+  setTableUsers,
+  updateUserData,
+} from "../../store/new-actions";
 
-function ModalMe() {
+function ModalMe(props) {
+  const { modalKey } = props;
+  const dispatch = useDispatch();
   //States of buttons to recieve and store values and clicks
   const [show, setShow] = useState(false);
   const [keyOfSender, setKeyOfSender] = useState(null);
@@ -22,79 +29,161 @@ function ModalMe() {
   const [secondUserData, setSecondUserData] = useState(null);
   const [modalShow, setModalShow] = useState(false);
   const [minusValue, setMinusValue] = useState(false);
+  const [errorMsg, setErrorMsg] = useState(false);
   const [disableMe, setDisableMe] = useState(false);
-  const [moneyLimit, setMoneyLimit] = useState('');
+  const [moneyLimit, setMoneyLimit] = useState("");
+  const [inputOnFocus, setInputOnFocus] = useState(false);
+
   const finalUsers = useSelector((state) => state.users.data);
 
   // Handles to use state and event trageting
   const handleClose = () => setShow(false);
+  const onFocus = () => setInputOnFocus(true);
+  const onBlur = () => setInputOnFocus(false);
   const handleShow = () => {
     setShow(true);
-    console.log(finalUsers);
-  };
-
-  const handleSend = (event) => {
-    setKeyOfSender(event);
+    setKeyOfSender(modalKey);
+    console.log(modalKey);
     finalUsers.forEach((element) => {
-      if(element.id == event){
-        console.log('Sender Selected');
+      if (element.id == modalKey) {
         setFirstUserData(element);
-      };
+      }
     });
   };
 
-  const handleReceive = (event) => {
-    setKeyOfReceiver(event);
-     finalUsers.forEach((secondUser) => {
-       if (secondUser.id == event) {
-         console.log("Receive Selected");
-         setSecondUserData(secondUser);
-       };
-     });
-     
+  // Filter All Users and get firstUserData
+  const handleSend = (event) => {
+    setKeyOfSender(event);
+    finalUsers.forEach((element) => {
+      if (element.id == event) {
+        console.log("Sender Selected");
+        setFirstUserData(element);
+      }
+    });
+    const sameUser = keyOfReceiver == event;
+    sameUser ? setErrorMsg(true) : setErrorMsg(false);
+    console.log(sameUser);
   };
 
- 
-  // Get Inputs 
+  // Filter All Users and get secondUserData
+
+  const handleReceive = (event) => {
+    setKeyOfReceiver(event);
+    finalUsers.forEach((secondUser) => {
+      if (secondUser.id == event) {
+        console.log("Receive Selected");
+        setSecondUserData(secondUser);
+      }
+    });
+    const sameUser = event == keyOfSender;
+    sameUser ? setErrorMsg(true) : setErrorMsg(false);
+    console.log(sameUser);
+  };
+
+  // Get Inputs
   const getInputValue = (event) => {
-    setMoneyValue(event.target.value);
-    setMoneyLimit(event.target.value.slice(0, 5));
-    // if(event.target.value.length >= 5){
-    //   setDisableMe(true);
-    // };
+    const inputValue = event.target.value;
+    setMoneyValue(inputValue);
+    setMoneyLimit(inputValue.slice(0, 4));
+    console.log(inputValue);
+    console.log(inputOnFocus);
+
+    if (
+      inputOnFocus &&
+      (inputValue.includes("-") ||
+        inputValue <= 0 ||
+        inputValue > firstUserData.accBalance)
+    ) {
+      console.log("no you cant exceed the balance");
+      setMinusValue(true);
+    } else {
+      console.log("okay");
+      setMinusValue(false);
+    }
   };
   const getMessageValue = (event) => {
     setUserMessage(event.target.value);
   };
-  
 
-
-  // Closeing Handle 
+  // Closeing Handle
   const handleDone = () => {
-      if (moneyValue.includes("-") || moneyValue <= 0) {
-        setMinusValue(true);
-      } else if (keyOfReceiver === keyOfSender) {
-        setValueCompareCheck(true);
-      } else {
-        setValueCompareCheck(false);
-        console.log(`User message : ${userMessage}`);
-        console.log(`Money amount : ${Number(moneyValue) + 1}`);
-        console.log(`reciever: ${keyOfReceiver}`);
-        console.log(`sender: ${keyOfSender}`);
-        console.log(
-          `First User data : ${firstUserData.name}, ${firstUserData.country}`
-        );
-        console.log(
-          `Second User data : ${secondUserData.name}, ${secondUserData.country}`
-        );
-        setShow(false);
-        setModalShow(true);
-      }
+    let moneyNumber = Number(moneyValue);
+    if (firstUserData.accBalance < moneyNumber) {
+      console.log("no you cant exceed the balance");
+    } else if (keyOfReceiver === keyOfSender) {
+      setValueCompareCheck(true);
+    } else {
+      setValueCompareCheck(false);
+
+      const amountChange = firstUserData.accBalance - moneyNumber;
+
+      console.log(typeof moneyValue);
+      console.log(`User message : ${userMessage}`);
+      console.log(`Money amount : ${Number(moneyValue)}`);
+      console.log(`reciever: ${keyOfReceiver}`);
+      console.log(`sender: ${keyOfSender}`);
+      console.log(
+        `First User data : ${firstUserData.name}, ${firstUserData.country}`
+      );
+      console.log(
+        `Second User data : ${secondUserData.name}, ${secondUserData.country}`
+      );
+      const myDate = new Date(Date.now());
+      dispatch(
+        updateUserData({
+          allData: firstUserData,
+          userId: firstUserData.id,
+          amountChange: firstUserData.accBalance - moneyNumber,
+          lastTrans: myDate.toGMTString(),
+        })
+      );
+      dispatch(
+        updateUserData({
+          allData: secondUserData,
+          userId: secondUserData.id,
+          amountChange: secondUserData.accBalance + moneyNumber,
+          lastTrans: myDate.toGMTString(),
+        })
+      );
+
+      // setKeyOfSender (null);
+      // setKeyOfReceiver (null);
+      // setMoneyValue (0);
+      // setUserMessage("");
+      // setValueCompareCheck (false);
+      // setFirstUserData (null);
+      // setSecondUserData (null);
+      // setModalShow (false);
+      // setMinusValue (false);
+      // setErrorMsg (false);
+      // setDisableMe (false);
+      // setMoneyLimit("");
+      // setInputOnFocus (false);
+      setShow(false);
+      setModalShow(true);
+    }
   };
+  const displayError = errorMsg && (
+    <p class="text-danger bg-light">'Are you kidding me?'</p>
+  );
+  const chooseUserMsg = (
+    <p class={displayError ? "text-danger" : "text-secondary"}>
+      Choose another user
+    </p>
+  );
 
-  const usersSelected = keyOfSender && keyOfReceiver && moneyValue;
-
-
+  //  const sameUser = keyOfReceiver === keyOfSender;
+  //  const atLeastValue = firstUserData.accBalance < moneyNumber;
+  //  const validData = usersSelected && sameUser && atLeastValue;
+  //  console.log(usersSelected, sameUser, atLeastValue);
+  //  console.log(firstUserData.accBalance);
+  const usersSelected = () => {
+    if (moneyValue && keyOfSender && keyOfReceiver) {
+      return false;
+    } else {
+      return true;
+    }
+  };
 
   return (
     <>
@@ -132,7 +221,6 @@ function ModalMe() {
             <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
               <Form.Label>Name of Recieving User</Form.Label>
               <DropdownButton
-                
                 title={
                   secondUserData === null
                     ? "User Will Receive Money"
@@ -149,9 +237,10 @@ function ModalMe() {
                 ))}
               </DropdownButton>
             </Form.Group>
+            {chooseUserMsg}
             <Form.Group
               className="mb-3"
-              controlId="exampleForm.ControlTextarea1"
+              controlId="exampleForm.ControlTextarea2"
             >
               <Form.Label>Amount</Form.Label>
               <Form.Control
@@ -162,16 +251,20 @@ function ModalMe() {
                 onChange={getInputValue}
                 value={moneyLimit}
                 rows={3}
+                onFocus={onFocus}
+                onBlur={onBlur}
+                color="text-danger"
               />
               <Form.Control
                 type="text"
-                disabled={!usersSelected}
+                disabled={usersSelected()}
                 placeholder={"Amount"}
                 onChange={getMessageValue}
                 autoFocus
               />
             </Form.Group>
           </Form>
+          {displayError};
           {!valueCompareCheck ? (
             ""
           ) : (
@@ -181,7 +274,7 @@ function ModalMe() {
           )}
           {minusValue ? (
             <Alert key="ALERT" variant="danger">
-              You can't send this values, Try bigger numbers!
+              You can't send these values, Try again!!
             </Alert>
           ) : (
             ""
@@ -194,7 +287,7 @@ function ModalMe() {
           <Button
             type="submit"
             variant="primary"
-            disabled={!usersSelected}
+            disabled={usersSelected()}
             onClick={handleDone}
           >
             Send Money
@@ -203,7 +296,10 @@ function ModalMe() {
       </Modal>
       <MyVerticallyCenteredModal
         show={modalShow}
-        onHide={() => setModalShow(false)}
+        onHide={() => {
+          setModalShow(false);
+          
+        }}
       />
     </>
   );
