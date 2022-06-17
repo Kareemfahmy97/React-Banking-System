@@ -4,8 +4,10 @@
 
 Banking System Web Application. GRIP@ Sparks Foundation web development and designing internship.
 
-###### Requested 
+###### Task Requirements : 
+
 Creating system which simulate banking experience of sending and receiving money between users by using full stack technologies.
+
 - Home > (Detail Page) 
 - Users Table > (10 Users)
 - History Table > (Transactions of all users)
