@@ -1,10 +1,7 @@
 import { useSelector } from "react-redux";
-import UsersTable from "./UsersTable";
 import { Table } from "react-bootstrap";
 import ModalMe from "./Modal";
 import "bootstrap/dist/css/bootstrap.min.css";
-
-
 
 
 export const UsersTableData = ()=> {
@@ -16,10 +13,8 @@ export const UsersTableData = ()=> {
         textAlign: 'center',
         verticalAlign: 'middle',
         margin: '0 auto 2rem',
-       };
-    //    const divTr = {
-    //        maxWidth: 'auto',
-    //    }
+      };
+
     const tableHead = (
       <thead size="sm">
         <tr>

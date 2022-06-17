@@ -1,21 +1,26 @@
 import React from "react";
 import {  Nav, Container, Navbar } from "react-bootstrap";
+import { Link } from "react-router-dom";
 
 const NavBar = () => {
   return (
     <>
-      <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark" >
+      <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
         <Container>
-          <Navbar.Brand href="#home">Banking System</Navbar.Brand>
+          <Navbar.Brand as={Link} to="/Home">
+            💰Minimalist Bank
+          </Navbar.Brand>
           <Navbar.Toggle aria-controls="responsive-navbar-nav" />
           <Navbar.Collapse id="responsive-navbar-nav">
-            <Nav className="me-auto">
-              <Nav.Link href="#features">Transfer</Nav.Link>
-              <Nav.Link href="#pricing">History</Nav.Link>
-            </Nav>
+            <Nav className="me-auto"></Nav>
             <Nav>
-              <Nav.Link href="#deets">All Users</Nav.Link>
-              <Nav.Link eventKey={2} href="#memes">
+              <Nav.Link as={Link} to="/Home">
+                Home
+              </Nav.Link>
+              <Nav.Link as={Link} to="/AllUsers">
+                All Users
+              </Nav.Link>
+              <Nav.Link as={Link} eventKey={2} to="/History-Trans">
                 Transactions history
               </Nav.Link>
             </Nav>

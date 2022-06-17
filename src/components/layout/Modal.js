@@ -10,10 +10,9 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import MyVerticallyCenteredModal from "./VerticalCenteredModal";
 import {
-  fetchTableUsers,
-  setTableUsers,
   updateUserData,
 } from "../../store/new-actions";
+import { setTableTrans } from "../../store/table-slice";
 
 function ModalMe(props) {
   const { modalKey } = props;
@@ -30,7 +29,6 @@ function ModalMe(props) {
   const [modalShow, setModalShow] = useState(false);
   const [minusValue, setMinusValue] = useState(false);
   const [errorMsg, setErrorMsg] = useState(false);
-  const [disableMe, setDisableMe] = useState(false);
   const [moneyLimit, setMoneyLimit] = useState("");
   const [inputOnFocus, setInputOnFocus] = useState(false);
 
@@ -43,7 +41,6 @@ function ModalMe(props) {
   const handleShow = () => {
     setShow(true);
     setKeyOfSender(modalKey);
-    console.log(modalKey);
     finalUsers.forEach((element) => {
       if (element.id == modalKey) {
         setFirstUserData(element);
@@ -56,13 +53,11 @@ function ModalMe(props) {
     setKeyOfSender(event);
     finalUsers.forEach((element) => {
       if (element.id == event) {
-        console.log("Sender Selected");
         setFirstUserData(element);
       }
     });
     const sameUser = keyOfReceiver == event;
     sameUser ? setErrorMsg(true) : setErrorMsg(false);
-    console.log(sameUser);
   };
 
   // Filter All Users and get secondUserData
@@ -71,22 +66,19 @@ function ModalMe(props) {
     setKeyOfReceiver(event);
     finalUsers.forEach((secondUser) => {
       if (secondUser.id == event) {
-        console.log("Receive Selected");
         setSecondUserData(secondUser);
       }
     });
     const sameUser = event == keyOfSender;
     sameUser ? setErrorMsg(true) : setErrorMsg(false);
-    console.log(sameUser);
   };
 
   // Get Inputs
   const getInputValue = (event) => {
     const inputValue = event.target.value;
     setMoneyValue(inputValue);
-    setMoneyLimit(inputValue.slice(0, 4));
-    console.log(inputValue);
-    console.log(inputOnFocus);
+    setMoneyLimit(inputValue.slice(0, 6));
+
 
     if (
       inputOnFocus &&
@@ -94,10 +86,8 @@ function ModalMe(props) {
         inputValue <= 0 ||
         inputValue > firstUserData.accBalance)
     ) {
-      console.log("no you cant exceed the balance");
       setMinusValue(true);
     } else {
-      console.log("okay");
       setMinusValue(false);
     }
   };
@@ -117,18 +107,16 @@ function ModalMe(props) {
 
       const amountChange = firstUserData.accBalance - moneyNumber;
 
-      console.log(typeof moneyValue);
-      console.log(`User message : ${userMessage}`);
-      console.log(`Money amount : ${Number(moneyValue)}`);
-      console.log(`reciever: ${keyOfReceiver}`);
-      console.log(`sender: ${keyOfSender}`);
-      console.log(
-        `First User data : ${firstUserData.name}, ${firstUserData.country}`
-      );
-      console.log(
-        `Second User data : ${secondUserData.name}, ${secondUserData.country}`
-      );
       const myDate = new Date(Date.now());
+      dispatch(
+        setTableTrans({
+          firstUser: firstUserData.name,
+          secondUser: secondUserData.name,
+          key: myDate,
+          amountChange: moneyNumber,
+          lastTrans: myDate.toGMTString(),
+        })
+      );
       dispatch(
         updateUserData({
           allData: firstUserData,
@@ -146,25 +134,12 @@ function ModalMe(props) {
         })
       );
 
-      // setKeyOfSender (null);
-      // setKeyOfReceiver (null);
-      // setMoneyValue (0);
-      // setUserMessage("");
-      // setValueCompareCheck (false);
-      // setFirstUserData (null);
-      // setSecondUserData (null);
-      // setModalShow (false);
-      // setMinusValue (false);
-      // setErrorMsg (false);
-      // setDisableMe (false);
-      // setMoneyLimit("");
-      // setInputOnFocus (false);
       setShow(false);
       setModalShow(true);
     }
   };
   const displayError = errorMsg && (
-    <p class="text-danger bg-light">'Are you kidding me?'</p>
+    <p class="text-danger bg-light">'You can't choose same user!'</p>
   );
   const chooseUserMsg = (
     <p class={displayError ? "text-danger" : "text-secondary"}>
@@ -172,18 +147,15 @@ function ModalMe(props) {
     </p>
   );
 
-  //  const sameUser = keyOfReceiver === keyOfSender;
-  //  const atLeastValue = firstUserData.accBalance < moneyNumber;
-  //  const validData = usersSelected && sameUser && atLeastValue;
-  //  console.log(usersSelected, sameUser, atLeastValue);
-  //  console.log(firstUserData.accBalance);
   const usersSelected = () => {
-    if (moneyValue && keyOfSender && keyOfReceiver) {
+    if (moneyValue.length <= 5 && keyOfSender >= 0 && keyOfReceiver >= 0) {
       return false;
     } else {
       return true;
     }
   };
+
+ 
 
   return (
     <>
@@ -215,7 +187,7 @@ function ModalMe(props) {
                     <Dropdown.Divider />
                   </Dropdown.Item>
                 ))}
-                ;
+                
               </DropdownButton>
             </Form.Group>
             <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
@@ -258,13 +230,13 @@ function ModalMe(props) {
               <Form.Control
                 type="text"
                 disabled={usersSelected()}
-                placeholder={"Amount"}
+                placeholder={"Optional: Leave a message for the user"}
                 onChange={getMessageValue}
                 autoFocus
               />
             </Form.Group>
           </Form>
-          {displayError};
+          {displayError}
           {!valueCompareCheck ? (
             ""
           ) : (
@@ -298,7 +270,6 @@ function ModalMe(props) {
         show={modalShow}
         onHide={() => {
           setModalShow(false);
-          
         }}
       />
     </>

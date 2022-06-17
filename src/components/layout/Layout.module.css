@@ -1,4 +1,23 @@
-.main {
-  margin: 3rem auto;
 
+.main {
+  position: relative;
+  margin: auto;
+  align-content: center;
+  text-align: center;
+  max-height: 50rem;
+  max-width: 180rem;
 }
+
+.center {
+  margin: 0 auto;
+  max-height: 41.5rem;
+  max-width: 180rem;
+}
+
+.buttonStyle {
+      text-align: center;
+      vertical-align: middle;
+      margin: 2rem auto;
+      display: flex;
+
+    }

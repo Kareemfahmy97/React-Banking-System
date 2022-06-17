@@ -5,7 +5,7 @@
 body {
   font-family: sans-serif;
   margin: 0;
-  background-color: #b8b8b8;
+  background-color: #333333;
 }
 
 .centered {
@@ -24,18 +24,18 @@ body {
 
 .btn {
   text-decoration: none;
-  background-color: teal;
-  color: white;
+  background-color: rgb(255, 204, 62);
+  color: rgb(62, 62, 62);
   border-radius: 4px;
   padding: 0.75rem 1.5rem;
-  border: 1px solid teal;
+  border: 1px solid rgb(42, 43, 43);
   cursor: pointer;
 }
 
 .btn:hover,
 .btn:active {
-  background-color: #11acac;
-  border-color: #11acac;
+  background-color: #f7c820;
+  border-color: #1857ea;
 }
 
 .btn--flat {

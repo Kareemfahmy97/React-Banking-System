@@ -9,11 +9,11 @@ function MyVerticallyCenteredModal(props) {
       centered
     >
       <Modal.Header closeButton>
-        <Modal.Title id="contained-modal-title-vcenter">Success</Modal.Title>
+        <Modal.Title id="contained-modal-title-vcenter">Success 🎉</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <h4>Successfully Sent</h4>
-        <p>Successfully Sent your transaction and saved in our data base</p>
+        <h4>Successfully Sent 👍</h4>
+        <p>This operation has been added to transactions history.</p>
       </Modal.Body>
       <Modal.Footer>
         <Button onClick={props.onHide}>Ok</Button>
