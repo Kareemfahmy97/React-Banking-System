@@ -24,6 +24,18 @@ Creating system which simulate banking experience of sending and receiving money
 
 ###### Some Screenshots:
 
+###### Click on data button to be redirected.
+
+![image](https://user-images.githubusercontent.com/88718975/174402967-98c655c4-9a2d-4bd1-b59e-a0708019066d.png)
+
+
+###### History Table.
+
+After Clicking on (History) button you will be redirected to the page where you can fetch transactions history.
+
+![image](https://user-images.githubusercontent.com/88718975/174402980-252ad3f4-8f18-4663-a908-e772f85882bd.png)
+
+
 ###### Table of users fetched by clicking on (Get all users) button.
 
 ![image](https://user-images.githubusercontent.com/88718975/174403206-6085a682-818a-4fc5-a15a-93aff9401202.png)
@@ -58,15 +70,6 @@ Creating system which simulate banking experience of sending and receiving money
 
 ![image](https://user-images.githubusercontent.com/88718975/174403986-ba070252-25c0-43c3-a866-28eb108eba16.png)
 
-
-![image](https://user-images.githubusercontent.com/88718975/174402967-98c655c4-9a2d-4bd1-b59e-a0708019066d.png)
-
-
-###### History Table 
-
-After Clicking on (History) button you will be redirected to the page where you can fetch transactions history.
-
-![image](https://user-images.githubusercontent.com/88718975/174402980-252ad3f4-8f18-4663-a908-e772f85882bd.png)
 
 
 
