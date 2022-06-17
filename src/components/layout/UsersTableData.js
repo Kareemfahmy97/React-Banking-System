@@ -19,7 +19,6 @@ export const UsersTableData = ()=> {
       <thead size="sm">
         <tr>
           <th>Id</th>
-          <th>E-mail</th>
           <th>Full Name</th>
           <th>balance</th>
           <th>Country</th>
@@ -35,7 +34,6 @@ export const UsersTableData = ()=> {
                 {finalUsers.map((user) => (
                   <tr key={user.id}>
                     <td>{user.id +1 }</td>
-                    <td>{user.email}</td>
                     <td>{user.name}</td>
                     <td>${user.accBalance}</td>
                     <td>{user.country}</td>
