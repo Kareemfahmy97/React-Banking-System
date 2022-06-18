@@ -1,4 +1,4 @@
-# Banking-System-App
+# React-Banking-System
 
 ## [LIVE DEMO](https://bank-system-app.web.app/Home)
 
